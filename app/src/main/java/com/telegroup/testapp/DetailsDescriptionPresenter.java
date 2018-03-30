@@ -107,13 +107,16 @@ public class DetailsDescriptionPresenter extends AbstractDetailsDescriptionPrese
             viewHolder.getTitle().setText(vijest.getNaslov());
             Vijesti fullVijest = getNewsById(vijest.getVijestID());
             viewHolder.getSubtitle().setText("Autor: " + fullVijest.getAutor() +
-                    "   " + "Datum: " + fullVijest.getDatum() + System.getProperty("line.separator") + vijest.getLid());
-            System.out.println("******************");
-            System.out.println(vijest.getLid());
+                    "   " + "Datum: " + fullVijest.getDatum() + System.getProperty("line.separator") + fullVijest.getLid());
+//            System.out.println("******************");
+//            System.out.println(vijest.getLid());
             /*fullVijest.setTijelo(fullVijest.getTijelo().replaceAll("<p>", "")
                     .replaceAll("</p>", System.getProperty("line.separator")).replaceAll("&nbsp;", ""));*/
             //fullVijest.setTijelo(Html.fromHtml(fullVijest.getTijelo(), Html.FROM_HTML_MODE_LEGACY).toString());
-            viewHolder.getBody().setText(Html.fromHtml(fullVijest.getTijelo()));
+            String parsedOnce = (Html.fromHtml(fullVijest.getTijelo())).toString();
+            System.out.println("********************");
+            System.out.println(parsedOnce);
+            viewHolder.getBody().setText(parsedOnce.replaceAll("<.*>.*</.*>", "").replaceAll("￼", ""));
         }
     }
 }

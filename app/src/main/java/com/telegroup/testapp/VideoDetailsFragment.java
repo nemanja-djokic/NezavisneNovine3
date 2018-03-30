@@ -244,7 +244,7 @@ public class VideoDetailsFragment extends DetailsFragment {
         boolean finishedReading = false;
         while(!finishedReading){
             try{
-                String request = "https://dtp.nezavisne.com/app/rubrika/" + mSelectedVijest.getMeniID() + "/"+1+"/"+6;
+                String request = "https://dtp.nezavisne.com/app/rubrika/" + mSelectedVijest.getMeniID() + "/"+1+"/"+11;
                 System.out.println("REQUEST");
                 System.out.println(request);
                 URL url = new URL(request);

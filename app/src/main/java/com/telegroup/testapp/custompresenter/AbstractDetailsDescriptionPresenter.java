@@ -77,8 +77,8 @@ public abstract class AbstractDetailsDescriptionPresenter extends Presenter {
             mTitleMaxLines = mTitle.getMaxLines();
             mSubtitle.setMinHeight(mSubtitle.getMinHeight() * 2);
             mSubtitle.setMaxHeight(mSubtitle.getMaxHeight() * 2);
-            mSubtitle.setMinLines(3);
-            mSubtitle.setMaxLines(3);
+            mSubtitle.setMinLines(4);
+            mSubtitle.setMaxLines(5);
             //mSubtitle.setMinHeight(mSubtitle.getMinHeight() * 2);
             //mSubtitle.setMaxHeight(mSubtitle.getMaxHeight() * 2);
 
