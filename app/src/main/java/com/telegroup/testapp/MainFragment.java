@@ -14,16 +14,13 @@
 
 package com.telegroup.testapp;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.ColorFilter;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.RequiresPermission;
 import android.support.v17.leanback.app.BackgroundManager;
 import android.support.v17.leanback.app.BrowseFragment;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
@@ -41,10 +38,8 @@ import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
@@ -54,13 +49,9 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -69,14 +60,14 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.telegroup.testapp.storage.Kategorija;
-import com.telegroup.testapp.storage.Vijesti;
+import com.telegroup.testapp.storage.Category;
+import com.telegroup.testapp.storage.News;
 
 public class MainFragment extends BrowseFragment {
 
-    private ArrayList<Kategorija> categories;
+    private ArrayList<Category> categories;
     private static String APICall = "http://dtp.nezavisne.com/app/v2/vijesti/{id}";
-    private HashMap<Integer, ArrayList<Vijesti>> vijesti = new HashMap<Integer, ArrayList<Vijesti>>();
+    private HashMap<Integer, ArrayList<News>> vijesti = new HashMap<Integer, ArrayList<News>>();
 
     private static final String TAG = "MainFragment";
 
@@ -223,7 +214,7 @@ public class MainFragment extends BrowseFragment {
                 int meniId = Integer.valueOf(wObject.getAsJsonPrimitive("meniID").getAsString());
                 String naziv = wObject.getAsJsonPrimitive("Naziv").getAsString();
                 String boja = wObject.getAsJsonPrimitive("Boja").getAsString();
-                categories.add(new Kategorija(i, meniId, naziv, boja));
+                categories.add(new Category(i, meniId, naziv, boja));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -297,8 +288,8 @@ public class MainFragment extends BrowseFragment {
                     Toast.makeText(getActivity(), ((String) item), Toast.LENGTH_SHORT).show();
                 }
             }*/
-            if(item instanceof Vijesti){
-                Vijesti vijest = (Vijesti) item;
+            if(item instanceof News){
+                News vijest = (News) item;
                 Intent intent = new Intent(getActivity(), DetailsActivity.class);
                 intent.putExtra("vijest", vijest);
 
@@ -324,10 +315,10 @@ public class MainFragment extends BrowseFragment {
                 mBackgroundUri = ((Movie) item).getBackgroundImageUrl();
                 startBackgroundTimer();
             }*/
-            if(item instanceof Vijesti){
-                String preparedUri = ((Vijesti)item).getSlikaURL().get(0).replaceAll("/[0-9]*x[0-9]*/", "/750x450/");
+            if(item instanceof News){
+                String preparedUri = ((News)item).getSlikaURL().get(0).replaceAll("/[0-9]*x[0-9]*/", "/750x450/");
                 mBackgroundUri = preparedUri;
-                ((Vijesti)item).getSlikaURL().set(0, mBackgroundUri);
+                ((News)item).getSlikaURL().set(0, mBackgroundUri);
                 startBackgroundTimer();
             }
             //getView().setBackgroundColor(Color.parseColor(categories.get((int)row.getId()).getBoja()));
@@ -379,14 +370,14 @@ public class MainFragment extends BrowseFragment {
     }
 
 
-    public HashMap<Integer, ArrayList<Vijesti>> createNews(int pocetak,int kraj) {
+    public HashMap<Integer, ArrayList<News>> createNews(int pocetak, int kraj) {
         Integer kategorija = 0;
         System.out.println("CATEGORIES SIZE " + categories.size());
         for (int johnCleese = 0; johnCleese < categories.size() ; johnCleese++) {
-            Kategorija kategorijaIter = categories.get(johnCleese);
+            Category categoryIter = categories.get(johnCleese);
             String jsonString = null;
             try{
-                String request = "https://dtp.nezavisne.com/app/rubrika/" + kategorijaIter.getMeniId() + "/+"+pocetak+"/"+kraj;
+                String request = "https://dtp.nezavisne.com/app/rubrika/" + categoryIter.getMeniId() + "/+"+pocetak+"/"+kraj;
                 URL url = new URL(request);
                 ReadJsonFromUrl readJsonFromUrl = new ReadJsonFromUrl();
                 readJsonFromUrl.execute(url);
@@ -404,25 +395,25 @@ public class MainFragment extends BrowseFragment {
             }
             JsonElement element = new JsonParser().parse(jsonString);
             JsonArray nizPocetni = element.getAsJsonArray();
-            ArrayList<Vijesti> vijesti1 = new ArrayList<Vijesti>();
+            ArrayList<News> news1 = new ArrayList<News>();
             for (int i = 0; i < nizPocetni.size(); i++) {
-                Vijesti vijest = new Vijesti();
+                News vijest = new News();
                 JsonObject object = nizPocetni.get(i).getAsJsonObject();
                 int vijestID = object.getAsJsonPrimitive("vijestID").getAsInt();
                 String naslov = object.getAsJsonPrimitive("Naslov").getAsString();
                 String lid = object.getAsJsonPrimitive("Lid").getAsString();
                 String urlSlika = object.getAsJsonPrimitive("Slika").getAsString();
                 kategorija = object.getAsJsonPrimitive("meniRoditelj").getAsInt();
-                vijest.setMeniID(kategorijaIter.getMeniId());
-                vijest.setColor(kategorijaIter.getBoja());
+                vijest.setMeniID(categoryIter.getMeniId());
+                vijest.setColor(categoryIter.getBoja());
                 vijest.setVijestID(vijestID);
                 vijest.setNaslov(naslov);
                 vijest.setLid(lid);
                 vijest.getSlikaURL().add(urlSlika);
-                vijesti1.add(vijest);
+                news1.add(vijest);
             }
             System.out.println("DODAVANJE ****************");
-            vijesti.put(kategorija, vijesti1);
+            vijesti.put(kategorija, news1);
         }
         createdNews = true;
         return vijesti;

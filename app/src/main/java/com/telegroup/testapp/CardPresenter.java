@@ -21,7 +21,7 @@ import android.util.Log;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
-import com.telegroup.testapp.storage.Vijesti;
+import com.telegroup.testapp.storage.News;
 
 /*
  * A CardPresenter is used to generate Views and bind Objects to them on demand.
@@ -74,8 +74,8 @@ public class CardPresenter extends Presenter {
     @Override
     public void onBindViewHolder(Presenter.ViewHolder viewHolder, Object item) {
         //Movie movie = (Movie) item;
-        if(item instanceof Vijesti){
-            Vijesti vijest = (Vijesti)item;
+        if(item instanceof News){
+            News vijest = (News)item;
             ImageCardView cardView = (ImageCardView) viewHolder.view;
 
             Log.d(TAG, "onBindViewHolder");

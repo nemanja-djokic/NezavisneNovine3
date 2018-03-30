@@ -4,13 +4,13 @@ package com.telegroup.testapp.storage;
  * Created by Nemanja Đokić on 18/03/27.
  */
 
-public class Kategorija {
+public class Category {
     private int rowId;
     private int meniId;
     private String naziv;
     private String boja;
 
-    public Kategorija(int rowId, int meniId, String naziv, String boja){
+    public Category(int rowId, int meniId, String naziv, String boja){
         this.rowId = rowId;
         this.meniId = meniId;
         this.naziv = naziv;

@@ -14,18 +14,16 @@
 
 package com.telegroup.testapp;
 
-import android.app.ActionBar;
 import android.os.AsyncTask;
 import android.text.Html;
 import android.text.method.ScrollingMovementMethod;
-import android.widget.TableLayout;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.telegroup.testapp.custompresenter.AbstractDetailsDescriptionPresenter;
-import com.telegroup.testapp.storage.Vijesti;
+import com.telegroup.testapp.storage.News;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -33,16 +31,15 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class DetailsDescriptionPresenter extends AbstractDetailsDescriptionPresenter {
 
     private static String APICall = "http://dtp.nezavisne.com/app/v2/vijesti/{id}";
 
-    public static Vijesti getNewsById(int id) {
+    public static News getNewsById(int id) {
         try {
             System.out.println("GETTING NEWS BY ID " + id);
-            Vijesti vijest = new Vijesti();
+            News vijest = new News();
             String request = APICall.replace("{id}", Integer.toString(id));
             URL url = new URL(request);
 
@@ -100,12 +97,12 @@ public class DetailsDescriptionPresenter extends AbstractDetailsDescriptionPrese
 //            viewHolder.getSubtitle().setText(movie.getStudio());
 //            viewHolder.getBody().setText(movie.getDescription());
 //        }
-        Vijesti vijest = (Vijesti) item;
+        News vijest = (News) item;
         if(vijest != null){
             viewHolder.getBody().setVerticalScrollBarEnabled(true);
             viewHolder.getBody().setMovementMethod(new ScrollingMovementMethod());
             viewHolder.getTitle().setText(vijest.getNaslov());
-            Vijesti fullVijest = getNewsById(vijest.getVijestID());
+            News fullVijest = getNewsById(vijest.getVijestID());
             viewHolder.getSubtitle().setText("Autor: " + fullVijest.getAutor() +
                     "   " + "Datum: " + fullVijest.getDatum() + System.getProperty("line.separator") + fullVijest.getLid());
 //            System.out.println("******************");

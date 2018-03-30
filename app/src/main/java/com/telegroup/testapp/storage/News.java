@@ -13,7 +13,7 @@ import java.util.Date;
  *
  * @author Aleksina Matić
  */
-public class Vijesti implements Serializable {
+public class News implements Serializable {
 
     private int vijestID;
     private String naslov;

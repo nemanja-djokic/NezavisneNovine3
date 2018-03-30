@@ -19,7 +19,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v17.leanback.app.DetailsFragment;
 import android.support.v17.leanback.app.DetailsFragmentBackgroundController;
 import android.support.v17.leanback.widget.Action;
@@ -39,9 +38,7 @@ import android.support.v17.leanback.widget.Row;
 import android.support.v17.leanback.widget.RowPresenter;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
-import android.text.Html;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
@@ -51,7 +48,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.telegroup.testapp.storage.Vijesti;
+import com.telegroup.testapp.storage.News;
 import com.telegroup.testapp.util.ImageProcess;
 
 import java.io.BufferedReader;
@@ -60,14 +57,12 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 /*
  * LeanbackDetailsFragment extends DetailsFragment, a Wrapper fragment for leanback details screens.
  * It shows a detailed view of video and its meta plus related videos.
  */
-public class VideoDetailsFragment extends DetailsFragment {
+public class NewsDetailsFragment extends DetailsFragment {
     private static final String TAG = "VideoDetailsFragment";
 
     private static final int ACTION_WATCH_TRAILER = 1;
@@ -78,9 +73,9 @@ public class VideoDetailsFragment extends DetailsFragment {
     private static final int DETAIL_THUMB_HEIGHT = 274;
 
     private static final int NUM_COLS = 10;
-    private ArrayList<Vijesti> vijesti = new ArrayList<Vijesti>();
+    private ArrayList<News> news = new ArrayList<News>();
 
-    private Vijesti mSelectedVijest;
+    private News mSelectedVijest;
 
     private ArrayObjectAdapter mAdapter;
     private ClassPresenterSelector mPresenterSelector;
@@ -95,7 +90,7 @@ public class VideoDetailsFragment extends DetailsFragment {
         mDetailsBackground = new DetailsFragmentBackgroundController(this);
 
         mSelectedVijest =
-                (Vijesti) getActivity().getIntent().getSerializableExtra("vijest");
+                (News) getActivity().getIntent().getSerializableExtra("vijest");
         if (mSelectedVijest != null) {
             mPresenterSelector = new ClassPresenterSelector();
             mAdapter = new ArrayObjectAdapter(mPresenterSelector);
@@ -111,7 +106,7 @@ public class VideoDetailsFragment extends DetailsFragment {
             startActivity(intent);
         }
     }
-    private void initializeBackground(Vijesti data) {
+    private void initializeBackground(News data) {
         mDetailsBackground.enableParallax();
         Glide.with(getActivity())
                 .load(data.getSlikaURL().get(0).replaceAll("/[0-9]*x[0-9]*/", "/750x450/"))
@@ -203,8 +198,8 @@ public class VideoDetailsFragment extends DetailsFragment {
 
         Collections.shuffle(list);*/
         ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new CardPresenter());
-        for (int j = 0; j < vijesti.size(); j++) {
-            listRowAdapter.add(vijesti.get(j));
+        for (int j = 0; j < news.size(); j++) {
+            listRowAdapter.add(news.get(j));
         }
 
         HeaderItem header = new HeaderItem(0, "Povezane vijesti");
@@ -223,8 +218,8 @@ public class VideoDetailsFragment extends DetailsFragment {
         public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item,
                                   RowPresenter.ViewHolder rowViewHolder, Row row) {
 
-            if(item instanceof Vijesti){
-                Vijesti vijest = (Vijesti) item;
+            if(item instanceof News){
+                News vijest = (News) item;
                 Intent intent = new Intent(getActivity(), DetailsActivity.class);
                 intent.putExtra("vijest", vijest);
 
@@ -268,7 +263,7 @@ public class VideoDetailsFragment extends DetailsFragment {
         JsonArray nizPocetni = element.getAsJsonArray();
         System.out.println("ARRAY SIZE " + nizPocetni.size());
         for (int i = 0; i < nizPocetni.size(); i++) {
-            Vijesti vijest = new Vijesti();
+            News vijest = new News();
             JsonObject object = nizPocetni.get(i).getAsJsonObject();
             int vijestID = object.getAsJsonPrimitive("vijestID").getAsInt();
             String naslov = object.getAsJsonPrimitive("Naslov").getAsString();
@@ -280,14 +275,14 @@ public class VideoDetailsFragment extends DetailsFragment {
             vijest.setNaslov(naslov);
             vijest.setLid(lid);
             vijest.getSlikaURL().add(urlSlika);
-            vijesti.add(vijest);
+            news.add(vijest);
         }
-        for(int i = 0; i < vijesti.size() ; i++){
-            if(vijesti.get(i).getVijestID() == mSelectedVijest.getVijestID()){
-                vijesti.remove(i);
+        for(int i = 0; i < news.size() ; i++){
+            if(news.get(i).getVijestID() == mSelectedVijest.getVijestID()){
+                news.remove(i);
             }
         }
-        System.out.println("PREPARED " + vijesti.size() + " NEWS");
+        System.out.println("PREPARED " + news.size() + " NEWS");
     }
 
     class ReadJsonFromUrl extends AsyncTask<URL, Integer, String> {
