@@ -74,8 +74,6 @@ public class MainFragment extends BrowseFragment {
     private static final int BACKGROUND_UPDATE_DELAY = 300;
     private static final int GRID_ITEM_WIDTH = 200;
     private static final int GRID_ITEM_HEIGHT = 200;
-    private static final int NUM_ROWS = 6;
-    private static final int NUM_COLS = 15;
 
     private boolean createdNews = false;
     private final Handler mHandler = new Handler();
@@ -99,15 +97,11 @@ public class MainFragment extends BrowseFragment {
 
         loadHeaders();
 
-        loadRows();
+        setupEventListeners();
 
         while(!createdNews){
             createNews(1, 15);
         }
-
-        loadRows();
-
-        setupEventListeners();
     }
 
     @Override
@@ -132,19 +126,9 @@ public class MainFragment extends BrowseFragment {
     }
 
     private void loadRows() {
-        // List<Movie> list = MovieList.setupMovies();
-
-        CardPresenter cardPresenter = new CardPresenter();
         int i;
         for (i = 0; i < categories.size(); i++) {
-//            if (i != 0) {
-//                Collections.shuffle(list);
-//            }
-            //ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(cardPresenter);
             ArrayObjectAdapter listRowAdapter = (ArrayObjectAdapter)((ListRow)rowsAdapter.get(i)).getAdapter();
-//            for (int j = 0; j < NUM_COLS; j++) {
-//                listRowAdapter.add(list.get(j % 5));
-//            }
             try{
                 for(int j = 0; j < vijesti.get(categories.get(i).getMeniId()).size(); j++){
                     listRowAdapter.add(vijesti.get(categories.get(i).getMeniId()).get(j));
@@ -153,16 +137,6 @@ public class MainFragment extends BrowseFragment {
                 return;
             }
         }
-
-        // HeaderItem gridHeader = new HeaderItem(i, "");
-//
-//        GridItemPresenter mGridPresenter = new GridItemPresenter();
-//        ArrayObjectAdapter gridRowAdapter = new ArrayObjectAdapter(mGridPresenter);
-//        gridRowAdapter.add(getResources().getString(R.string.grid_view));
-//        gridRowAdapter.add(getString(R.string.error_fragment));
-//        gridRowAdapter.add(getResources().getString(R.string.personal_settings));
-//        rowsAdapter.add(new ListRow(gridHeader, gridRowAdapter));
-
         setAdapter(rowsAdapter);
     }
 
@@ -248,7 +222,7 @@ public class MainFragment extends BrowseFragment {
                     public void onResourceReady(GlideDrawable resource,
                                                 GlideAnimation<? super GlideDrawable>
                                                         glideAnimation) {
-                        resource.setColorFilter(0xFF7F7F7F, PorterDuff.Mode.MULTIPLY);
+                        resource.setColorFilter(0xFF5F5F5F, PorterDuff.Mode.MULTIPLY);
                         mBackgroundManager.setDrawable(resource);
                     }
                 });
@@ -412,8 +386,17 @@ public class MainFragment extends BrowseFragment {
                 vijest.getSlikaURL().add(urlSlika);
                 news1.add(vijest);
             }
-            System.out.println("DODAVANJE ****************");
             vijesti.put(kategorija, news1);
+            ArrayObjectAdapter listRowAdapter = (ArrayObjectAdapter)((ListRow)rowsAdapter.get(johnCleese)).getAdapter();
+            /*for(int j = 0; j < vijesti.get(categories.get(johnCleese).getMeniId()).size(); j++){
+                listRowAdapter.add(vijesti.get(categories.get(johnCleese).getMeniId()).get(j));
+            }*/
+            for(int j = 0; j < news1.size(); j++){
+                listRowAdapter.add(news1.get(j));
+                listRowAdapter.notifyArrayItemRangeChanged(0, j);
+            }
+            rowsAdapter.notifyArrayItemRangeChanged(0, johnCleese);
+            setAdapter(rowsAdapter);
         }
         createdNews = true;
         return vijesti;
